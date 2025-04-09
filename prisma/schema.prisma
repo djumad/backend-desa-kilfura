@@ -1,0 +1,190 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String          @id @default(cuid())
+  nama          String          @db.VarChar(100)
+  email         String          @unique @db.VarChar(100)
+  foto          String?         @db.VarChar(100)
+  password      String          @db.VarChar(100)
+  token         String?         @db.Text
+  berita        Berita[]
+  profilDesa    ProfilDesa[]
+  sejarahDesa   SejarahDesa[]
+  visiMisi      VisiMisi[]
+  perangkatDesa PerangkatDesa[]
+}
+
+model ProfilDesa {
+  id       String @id @default(cuid())
+  userId   String
+  namaDesa String @db.VarChar(100)
+  logo     String @db.VarChar(100)
+  user     User   @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SejarahDesa {
+  id        String  @id @default(cuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+  judul     String  @db.VarChar(100)
+  foto      String? @db.VarChar(100)
+  deskripsi String  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Berita {
+  id        String @id @default(cuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id])
+  judul     String @db.VarChar(100)
+  deskripsi String @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VisiMisi {
+  id        String  @id @default(cuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+  judul     String  @db.VarChar(100)
+  foto      String? @db.VarChar(100)
+  deskripsi String  @db.Text
+}
+
+model PerangkatDesa {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  nama   String @db.VarChar(100)
+  status String @db.VarChar(100)
+  profil String @db.VarChar(100)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DataPenduduk {
+  id                 String   @id @default(cuid())
+  nama               String
+  tanggalLahir       DateTime
+  pekerjaan          String
+  jenisKelamin       String
+  pendidikanTerakhir String
+  agama              String
+
+  kartuKeluargaId  String?
+  kartuKeluarga    KartuKeluarga? @relation("AnggotaKeluarga", fields: [kartuKeluargaId], references: [id])
+  hubunganKeluarga String?        @db.VarChar(50)
+
+  kepalaDariKartuKeluarga KartuKeluarga? @relation("KepalaKeluarga") // <- ini penting
+}
+
+model KartuKeluarga {
+  id        String @id @default(cuid())
+  nomorKK   String @unique @db.VarChar(50)
+  alamat    String @db.VarChar(255)
+  rt        String @db.VarChar(10)
+  rw        String @db.VarChar(10)
+  desa      String @db.VarChar(100)
+  kecamatan String @db.VarChar(100)
+  kabupaten String @db.VarChar(100)
+  provinsi  String @db.VarChar(100)
+
+  kepalaKeluargaId String?       @unique
+  kepalaKeluarga   DataPenduduk? @relation("KepalaKeluarga", fields: [kepalaKeluargaId], references: [id])
+
+  anggota DataPenduduk[] @relation("AnggotaKeluarga")
+}
+
+model KontakDesa {
+  id       String @id @default(cuid())
+  alamat   String @db.VarChar(255)
+  email    String @db.VarChar(100)
+  telepon  String @db.VarChar(20)
+  whatsapp String @db.VarChar(20)
+  mapsUrl  String @db.VarChar(255)
+}
+
+model LembagaDesa {
+  id        String  @id @default(cuid())
+  nama      String  @db.VarChar(100)
+  deskripsi String  @db.Text
+  foto      String? @db.VarChar(100)
+}
+
+model Galeri {
+  id        String   @id @default(cuid())
+  judul     String   @db.VarChar(100)
+  foto      String   @db.VarChar(100)
+  deskripsi String   @db.Text
+  tanggal   DateTime
+}
+
+model Agenda {
+  id        String   @id @default(cuid())
+  judul     String   @db.VarChar(100)
+  lokasi    String   @db.VarChar(100)
+  deskripsi String   @db.Text
+  tanggal   DateTime
+}
+
+model Pengumuman {
+  id      String   @id @default(cuid())
+  judul   String   @db.VarChar(100)
+  isi     String   @db.Text
+  tanggal DateTime
+}
+
+model TransparansiAnggaran {
+  id         String @id @default(cuid())
+  tahun      Int
+  pendapatan Float
+  belanja    Float
+  rincian    String @db.Text
+}
+
+model ProdukUnggulan {
+  id        String @id @default(cuid())
+  nama      String @db.VarChar(100)
+  deskripsi String @db.Text
+  foto      String @db.VarChar(100)
+  harga     Int
+}
+
+model PotensiDesa {
+  id        String  @id @default(cuid())
+  kategori  String  @db.VarChar(100) // contoh: wisata, pertanian, perikanan
+  nama      String  @db.VarChar(100)
+  deskripsi String  @db.Text
+  foto      String? @db.VarChar(100)
+}
+
+model AduanMasyarakat {
+  id      String   @id @default(cuid())
+  nama    String   @db.VarChar(100)
+  email   String   @db.VarChar(100)
+  isi     String   @db.Text
+  tanggal DateTime @default(now())
+  status  String   @default("belum dibaca") // atau "diproses", "selesai"
+}
+
+model LayananSurat {
+  id          String   @id @default(cuid())
+  namaPemohon String   @db.VarChar(100)
+  jenisSurat  String   @db.VarChar(100) // contoh: surat keterangan, domisili
+  keterangan  String   @db.Text
+  status      String   @default("diajukan") // atau "diproses", "selesai"
+  tanggal     DateTime @default(now())
+}
