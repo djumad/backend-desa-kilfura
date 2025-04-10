@@ -1,7 +1,8 @@
 import prismaClient from "../database/prisma-client.mjs";
 import { ResponseException } from "../schema/response.mjs";
-import { userEmail, userRequestLogin, userRequestRegistrasi, userToken } from "../schema/user-schema.mjs";
+import { userEmail, userRequestLogin, userRequestRegistrasi, userToken, userUpdateSchema } from "../schema/user-schema.mjs";
 import bcrypt from "bcrypt";
+import path from "path";
 import {v4 as uuid} from "uuid";
 
 export const registrasi = async (request) => {
@@ -93,6 +94,7 @@ export const get = async(token)=>{
         id : user.id,
         nama : user.nama,
         email : user.email,
+        foto : user.foto,
         token : user.token
     }
 }
@@ -123,3 +125,41 @@ export const logoutUser = async(email)=>{
         }
     });
 }
+
+export const updateUser = async (req) => {
+    const id = req.user.id; // ✅ diperbaiki
+    const body = req.body;
+    const file = req.file;
+  
+    const validation = userUpdateSchema.safeParse(body);
+    if (!validation.success) {
+      throw new Error("Data tidak valid");
+    }
+  
+    const existing = await prismaClient.user.findUnique({ where: { id } });
+    if (!existing) throw new Error("User tidak ditemukan");
+  
+    let updateData = {
+      nama: body.nama,
+      email: body.email,
+    };
+  
+    if (file) {
+      if (existing.foto) {
+        const oldPath = path.join("storage", existing.foto);
+        try {
+          await fs.unlink(oldPath);
+        } catch (err) {
+          console.warn("Gagal menghapus foto lama:", err.message);
+        }
+      }
+      updateData.foto = path.posix.join("user", file.filename);
+    }
+  
+    return await prismaClient.user.update({
+      where: { id },
+      data: updateData,
+    });
+  };
+  
+  

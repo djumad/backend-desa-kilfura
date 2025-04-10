@@ -11,5 +11,10 @@ export const userRequestLogin = z.object({
     password : z.string().min(6).max(100)
 });
 
+export const userUpdateSchema = z.object({
+    nama: z.string().min(1),
+    email: z.string().email(),
+  });
+  
 export const userToken = z.string().uuid();
 export const userEmail = z.string().email();

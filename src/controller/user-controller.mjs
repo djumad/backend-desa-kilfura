@@ -1,7 +1,8 @@
 import {Router} from "express";
-import {login, logoutUser, registrasi} from "../service/user-service.mjs";
+import {login, logoutUser, registrasi, updateUser} from "../service/user-service.mjs";
 import { ResponseException } from "../schema/response.mjs";
 import userMiddeware from "../middleware/user-middleware.mjs";
+import { dynamicUpload } from "../middleware/upload-middleware.mjs";
 const userController = Router();
 
 userController.post("/api/users/registrasi" , async(req , res)=>{
@@ -51,6 +52,31 @@ userController.delete("/api/users/logout" , userMiddeware , async(req , res)=>{
         console.error("Unexpected error:", error);
         return res.status(500).json({ error: "Internal Server Error" });
     }
-})
+});
+
+userController.put(
+    "/api/users/update",
+    dynamicUpload("foto", "user"), // ✅ HARUS SEBELUM middleware lainnya
+    userMiddeware,
+    async (req, res) => {
+      try {
+        console.log({
+          id: req.user.id,
+          email: req.body.email,
+          nama: req.body.nama,
+          foto: req.file, // ✅ cek langsung req.file
+        });
+  
+        const data = await updateUser(req);
+        res.status(200).json({
+          message: "User berhasil diperbarui",
+          data,
+        });
+      } catch (error) {
+        res.status(400).json({ error: error.message });
+      }
+    }
+  );
+  
 
 export default userController;
