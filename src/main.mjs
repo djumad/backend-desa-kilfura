@@ -13,6 +13,7 @@ import dataPendudukController from "./controller/data-penduduk-controller.mjs";
 import kartuKeluargaController from "./controller/kartu-keluarga-controller.mjs";
 import cors from "cors";
 import sejarahDesaController from "./controller/sejarah-desa-controller.mjs";
+import lembagaDesaController from "./controller/lembaga-desa-controller.mjs";
 const web = express();
 
 web.use(express.json());
@@ -27,6 +28,7 @@ web.use(perangkatDesaController);
 web.use(kontakDesaController);
 web.use(galeriController);
 web.use(agendaController);
+web.use(lembagaDesaController);
 web.use(pengumumanController);
 web.use(transparansiController);
 web.use(produkUnggulanController);

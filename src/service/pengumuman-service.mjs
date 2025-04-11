@@ -1,4 +1,5 @@
 import prismaClient from "../database/prisma-client.mjs";
+import parseTanggal from "../lib/parseTanggal";
 import { pengumumanSchema } from "../schema/pengumuman-schema.mjs";
 
 export const createPengumuman = async (req) => {
@@ -11,7 +12,7 @@ export const createPengumuman = async (req) => {
     data: {
       judul: body.judul,
       isi: body.isi,
-      tanggal: new Date(body.tanggal),
+      tanggal: parseTanggal(body.tanggal),
     },
   });
 };
@@ -56,7 +57,7 @@ export const updatePengumuman = async (req) => {
     data: {
       judul: body.judul,
       isi: body.isi,
-      tanggal: new Date(body.tanggal),
+      tanggal: parseTanggal(body.tanggal),
     },
   });
 };

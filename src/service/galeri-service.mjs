@@ -2,12 +2,8 @@ import prismaClient from "../database/prisma-client.mjs";
 import { galeriSchema } from "../schema/galeri-schema.mjs";
 import path from "path";
 import fs from "fs/promises";
+import parseTanggal from "../lib/parseTanggal";
 
-function parseTanggal(tanggalStr) {
-  const date = new Date(tanggalStr);
-  if (isNaN(date)) throw new Error("Format tanggal tidak valid");
-  return date;
-}
 
 export const createGaleri = async (req) => {
   const { body, file } = req;

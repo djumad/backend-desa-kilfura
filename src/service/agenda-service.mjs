@@ -1,12 +1,8 @@
 import prismaClient from "../database/prisma-client.mjs";
+import parseTanggal from "../lib/parseTanggal";
 import { agendaSchema } from "../schema/agenda-schema.mjs";
 
 // Helper untuk memastikan tanggal valid
-function parseTanggal(tanggalStr) {
-  const date = new Date(tanggalStr);
-  if (isNaN(date)) throw new Error("Format tanggal tidak valid");
-  return date;
-}
 
 export const createAgenda = async (req) => {
   const body = req.body;
