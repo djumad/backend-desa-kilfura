@@ -11,11 +11,13 @@ import {
 const agendaController = Router();
 
 agendaController.post("/api/agenda/create", userMiddleware, async (req, res) => {
+  console.log(req.body);
   try {
     const data = await createAgenda(req);
     res.json({ message: "Agenda berhasil dibuat", data });
   } catch (e) {
     res.status(400).json({ error: e.message });
+    console.log({error: e.message});
   }
 });
 

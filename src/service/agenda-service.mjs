@@ -1,6 +1,13 @@
 import prismaClient from "../database/prisma-client.mjs";
 import { agendaSchema } from "../schema/agenda-schema.mjs";
 
+// Helper untuk memastikan tanggal valid
+function parseTanggal(tanggalStr) {
+  const date = new Date(tanggalStr);
+  if (isNaN(date)) throw new Error("Format tanggal tidak valid");
+  return date;
+}
+
 export const createAgenda = async (req) => {
   const body = req.body;
 
@@ -12,7 +19,7 @@ export const createAgenda = async (req) => {
       judul: body.judul,
       lokasi: body.lokasi,
       deskripsi: body.deskripsi,
-      tanggal: new Date(body.tanggal),
+      tanggal: parseTanggal(body.tanggal),
     },
   });
 };
@@ -41,7 +48,7 @@ export const updateAgenda = async (req) => {
       judul: body.judul,
       lokasi: body.lokasi,
       deskripsi: body.deskripsi,
-      tanggal: new Date(body.tanggal),
+      tanggal: parseTanggal(body.tanggal),
     },
   });
 };
