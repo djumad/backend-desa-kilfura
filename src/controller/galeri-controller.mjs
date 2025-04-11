@@ -16,11 +16,14 @@ galeriController.post(
   dynamicUpload("foto", "galeri"),
   userMiddleware,
   async (req, res) => {
+    console.log(req.body);
+    console.log(req.file);
     try {
       const data = await createGaleri(req);
       res.json({ message: "Galeri berhasil ditambahkan", data });
     } catch (e) {
       res.status(400).json({ error: e.message });
+      console.log(e.message);
     }
   }
 );

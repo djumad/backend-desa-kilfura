@@ -3,6 +3,12 @@ import { galeriSchema } from "../schema/galeri-schema.mjs";
 import path from "path";
 import fs from "fs/promises";
 
+function parseTanggal(tanggalStr) {
+  const date = new Date(tanggalStr);
+  if (isNaN(date)) throw new Error("Format tanggal tidak valid");
+  return date;
+}
+
 export const createGaleri = async (req) => {
   const { body, file } = req;
   const validation = galeriSchema.safeParse(body);
@@ -17,7 +23,7 @@ export const createGaleri = async (req) => {
       judul: body.judul,
       deskripsi: body.deskripsi,
       foto: filePath,
-      tanggal: new Date(body.tanggal),
+      tanggal: parseTanggal(body.tanggal),
     },
   });
 };
@@ -43,7 +49,7 @@ export const updateGaleri = async (req) => {
   const updateData = {
     judul: body.judul,
     deskripsi: body.deskripsi,
-    tanggal: new Date(body.tanggal),
+    tanggal: parseTanggal(body.tanggal),
   };
 
   if (file) {
