@@ -1,5 +1,5 @@
 import prismaClient from "../database/prisma-client.mjs";
-import parseTanggal from "../lib/parseTanggal";
+import parseTanggal from "../lib/parseTanggal.mjs";
 import { agendaSchema } from "../schema/agenda-schema.mjs";
 
 // Helper untuk memastikan tanggal valid

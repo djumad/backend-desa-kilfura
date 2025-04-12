@@ -14,6 +14,7 @@ import kartuKeluargaController from "./controller/kartu-keluarga-controller.mjs"
 import cors from "cors";
 import sejarahDesaController from "./controller/sejarah-desa-controller.mjs";
 import lembagaDesaController from "./controller/lembaga-desa-controller.mjs";
+import potensiDesaController from "./controller/potensi-desa-controller.mjs";
 const web = express();
 
 web.use(express.json());
@@ -35,6 +36,7 @@ web.use(produkUnggulanController);
 web.use(dataPendudukController);
 web.use(kartuKeluargaController);
 web.use(sejarahDesaController);
+web.use(potensiDesaController);
 
 web.use("/storage", express.static("storage"))
 

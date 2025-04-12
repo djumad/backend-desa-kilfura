@@ -2,7 +2,7 @@ import prismaClient from "../database/prisma-client.mjs";
 import { galeriSchema } from "../schema/galeri-schema.mjs";
 import path from "path";
 import fs from "fs/promises";
-import parseTanggal from "../lib/parseTanggal";
+import parseTanggal from "../lib/parseTanggal.mjs";
 
 
 export const createGaleri = async (req) => {
